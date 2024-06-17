@@ -72,8 +72,8 @@ public class Matrix4x4Serializer : PsiASerializer<System.Numerics.Matrix4x4>
     public override void Deserialize(BufferReader reader, ref System.Numerics.Matrix4x4 target, SerializationContext context) { }
 }
 
-public class DictionaryStringVector3Serializer : PsiASerializer<Dictionary<string, System.Numerics.Vector3>>
+public class EyeTrackingSerializer : PsiASerializer<Dictionary<string, IEyeTracking>>
 {
-    public override void Serialize(BufferWriter writer, Dictionary<string, System.Numerics.Vector3> instance, SerializationContext context) { }
-    public override void Deserialize(BufferReader reader, ref Dictionary<string, System.Numerics.Vector3> target, SerializationContext context) { }
+    public override void Serialize(BufferWriter writer, Dictionary<string, IEyeTracking> instance, SerializationContext context) { }
+    public override void Deserialize(BufferReader reader, ref Dictionary<string, IEyeTracking> target, SerializationContext context) { }
 }

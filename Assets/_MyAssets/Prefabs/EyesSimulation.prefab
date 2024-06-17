@@ -754,8 +754,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TopicName: EyeTracking
   DataPerSecond: 1
+  PlayerHead: {fileID: 8247674515346912796}
   LeftEye: {fileID: 3276078158360003407}
   RightEye: {fileID: 8036204530174931814}
+  ActivateDebug: 0
+  EyeTrackingVisualization: {fileID: 0}
+  LayersToHit:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &8865965789386082299
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,37 +1,33 @@
 ﻿using Microsoft.Psi.Interop.Serialization;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 public class PsiFormatEyeTracking
 {
-    public static Format<Dictionary<string, System.Numerics.Vector3>> GetFormat()
+    public static Format<Dictionary<string, IEyeTracking>> GetFormat()
     {
-        return new Format<Dictionary<string, System.Numerics.Vector3>>(WriteEyeTracking, ReadEyeTracking);
+        return new Format<Dictionary<string, IEyeTracking>>(WriteEyeTracking, ReadEyeTracking);
     }
 
-    public static void WriteEyeTracking(Dictionary<string, System.Numerics.Vector3> eyeTracking, BinaryWriter writer)
+    public static void WriteEyeTracking(Dictionary<string, IEyeTracking> eyeTracking, BinaryWriter writer)
     {
         writer.Write(eyeTracking.Count);
-        foreach (var item in eyeTracking)
+        foreach(var item in eyeTracking)
         {
             writer.Write(item.Key);
-            writer.Write((double)item.Value.X);
-            writer.Write((double)item.Value.Y);
-            writer.Write((double)item.Value.Z);
+            item.Value.Write(writer);
         }
     }
 
-    public static Dictionary<string, System.Numerics.Vector3> ReadEyeTracking(BinaryReader reader)
+    public static Dictionary<string, IEyeTracking> ReadEyeTracking(BinaryReader reader)
     {
         int count = reader.ReadInt32();
-        Dictionary<string, System.Numerics.Vector3> dictionary = new Dictionary<string, System.Numerics.Vector3>(count);
-        for (int i = 0; i < count; i++)
+        Dictionary<string, IEyeTracking> dictionary = new Dictionary<string, IEyeTracking>(count);
+        EyeTrackingTemplate template = new EyeTrackingTemplate();
+        foreach (var item in template.content)
         {
-            var key = reader.ReadString();
-            var value = new System.Numerics.Vector3((float)reader.ReadDouble(), (float)reader.ReadDouble(), (float)reader.ReadDouble());
-            dictionary.Add(key, value);
+            dictionary.Add(reader.ReadString(), item.Value.Read(reader));
         }
         return dictionary;
     }
