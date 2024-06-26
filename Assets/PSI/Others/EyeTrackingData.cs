@@ -3,6 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
+public enum ETData
+{
+    LeftEyePosition,
+    LeftEyeRotation,
+    LeftGaze,
+    RightEyePosition,
+    RightEyeRotation,
+    RightGaze,
+    HeadDirection,
+    CenterEyePosition,
+    AverageGaze,
+    IsGazingAtSomething,
+    FirstIntersectionPoint,
+    GazedObjectName,
+    HasEyeTrackingTags,
+    EyeTrackingTagsList
+}
+
+
 public interface IEyeTracking
 {
     abstract Type GetType();
@@ -88,27 +107,26 @@ public class EyeTrackingStringList : IEyeTracking
 
     public class EyeTrackingTemplate : IEyeTracking
 {
-    public Dictionary<string, IEyeTracking> content;
+    public Dictionary<ETData, IEyeTracking> content;
 
     public EyeTrackingTemplate()
     {
-         content = new Dictionary<string, IEyeTracking>()
+         content = new Dictionary<ETData, IEyeTracking>()
         {
-            {"playerId", new EyeTrackingInt() },
-            {"leftEyePosition", new EyeTrackingVector3() },
-            {"leftEyeRotation", new EyeTrackingVector3() },
-            {"leftGaze", new EyeTrackingVector3() },
-            {"rightEyePosition", new EyeTrackingVector3() },
-            {"rightEyeRotation", new EyeTrackingVector3() },
-            {"rightGaze", new EyeTrackingVector3() },
-            {"headDirection", new EyeTrackingVector3() },
-            {"centerEyePosition", new EyeTrackingVector3() },
-            {"averageGaze", new EyeTrackingVector3() },
-            {"isGazingAtSomething", new EyeTrackingBool() },
-            {"firstIntersectionPoint", new EyeTrackingVector3() },
-            {"gazedObjectName", new EyeTrackingString() },
-            {"hasEyeTrackingTags", new EyeTrackingBool() },
-            {"eyeTrackingTagsList", new EyeTrackingStringList() }
+            {ETData.LeftEyePosition, new EyeTrackingVector3() },
+            {ETData.LeftEyeRotation, new EyeTrackingVector3() },
+            {ETData.LeftGaze, new EyeTrackingVector3() },
+            {ETData.RightEyePosition, new EyeTrackingVector3() },
+            {ETData.RightEyeRotation, new EyeTrackingVector3() },
+            {ETData.RightGaze, new EyeTrackingVector3() },
+            {ETData.HeadDirection, new EyeTrackingVector3() },
+            {ETData.CenterEyePosition, new EyeTrackingVector3() },
+            {ETData.AverageGaze, new EyeTrackingVector3() },
+            {ETData.IsGazingAtSomething, new EyeTrackingBool() },
+            {ETData.FirstIntersectionPoint, new EyeTrackingVector3() },
+            {ETData.GazedObjectName, new EyeTrackingString() },
+            {ETData.HasEyeTrackingTags, new EyeTrackingBool() },
+            {ETData.EyeTrackingTagsList, new EyeTrackingStringList() }
         };
         
     }

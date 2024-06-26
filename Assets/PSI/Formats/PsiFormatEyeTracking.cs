@@ -5,29 +5,29 @@ using System.Linq;
 
 public class PsiFormatEyeTracking
 {
-    public static Format<Dictionary<string, IEyeTracking>> GetFormat()
+    public static Format<Dictionary<ETData, IEyeTracking>> GetFormat()
     {
-        return new Format<Dictionary<string, IEyeTracking>>(WriteEyeTracking, ReadEyeTracking);
+        return new Format<Dictionary<ETData, IEyeTracking>>(WriteEyeTracking, ReadEyeTracking);
     }
 
-    public static void WriteEyeTracking(Dictionary<string, IEyeTracking> eyeTracking, BinaryWriter writer)
+    public static void WriteEyeTracking(Dictionary<ETData, IEyeTracking> eyeTracking, BinaryWriter writer)
     {
         writer.Write(eyeTracking.Count);
         foreach(var item in eyeTracking)
         {
-            writer.Write(item.Key);
+            writer.Write((int)item.Key);
             item.Value.Write(writer);
         }
     }
 
-    public static Dictionary<string, IEyeTracking> ReadEyeTracking(BinaryReader reader)
+    public static Dictionary<ETData, IEyeTracking> ReadEyeTracking(BinaryReader reader)
     {
         int count = reader.ReadInt32();
-        Dictionary<string, IEyeTracking> dictionary = new Dictionary<string, IEyeTracking>(count);
+        Dictionary<ETData, IEyeTracking> dictionary = new Dictionary<ETData, IEyeTracking>(count);
         EyeTrackingTemplate template = new EyeTrackingTemplate();
         foreach (var item in template.content)
         {
-            dictionary.Add(reader.ReadString(), item.Value.Read(reader));
+            dictionary.Add((ETData)reader.ReadInt32(), item.Value.Read(reader));
         }
         return dictionary;
     }

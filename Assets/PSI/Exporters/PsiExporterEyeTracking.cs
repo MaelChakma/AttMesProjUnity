@@ -20,7 +20,7 @@ public class EyeTrackingUnityVector3 : IEyeTracking
     public EyeTrackingVector3 ToEyeTrackingVector3() { return new EyeTrackingVector3(content.x, content.y, content.z); }
 }
 
-public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTracking>>
+public class PsiExporterEyeTracking : PsiExporter<Dictionary<ETData, IEyeTracking>>
 {
 
     [Space, SerializeField]
@@ -36,7 +36,7 @@ public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTrackin
     [SerializeField]
     private LayerMask LayersToHit;
 
-    private Dictionary<string, IEyeTracking> PreviousEyeTracking = new Dictionary<string, IEyeTracking>();
+    private Dictionary<ETData, IEyeTracking> PreviousEyeTracking = new Dictionary<ETData, IEyeTracking>();
 
     override public void Start()
     {
@@ -58,9 +58,8 @@ public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTrackin
     void Update()
     {
         //Creating dictionary and recovering data
-        Dictionary<string, IEyeTracking> eyeTracking = new Dictionary<string, IEyeTracking>();
+        Dictionary<ETData, IEyeTracking> eyeTracking = new Dictionary<ETData, IEyeTracking>();
         
-        var playerId = 0;
         var leftEyePosition = LeftEye.transform.position;
         var leftEyeRotation = LeftEye.transform.eulerAngles;
         var leftGaze = LeftEye.transform.rotation*Vector3.forward;
@@ -90,21 +89,20 @@ public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTrackin
         if (ActivateDebug) { Debug.DrawRay(centerEyePosition, averageGaze * 10, Color.magenta); }
         
         //Adding data to dictionary
-        eyeTracking.Add("playerId", new EyeTrackingInt(playerId));
-        eyeTracking.Add("leftEyePosition", new EyeTrackingVector3(leftEyePosition.x, leftEyePosition.y, leftEyePosition.z));
-        eyeTracking.Add("leftEyeRotation", new EyeTrackingVector3(leftEyeRotation.x, leftEyeRotation.y, leftEyeRotation.z));
-        eyeTracking.Add("leftGaze", new EyeTrackingVector3(leftGaze.x, leftGaze.y, leftGaze.z));
-        eyeTracking.Add("rightEyePosition", new EyeTrackingVector3(rightEyePosition.x, rightEyePosition.y, rightEyePosition.z));
-        eyeTracking.Add("rightEyeRotation", new EyeTrackingVector3(rightEyeRotation.x, rightEyeRotation.y, rightEyeRotation.z));
-        eyeTracking.Add("rightGaze", new EyeTrackingVector3(rightGaze.x, rightGaze.y, rightGaze.z));
-        eyeTracking.Add("headDirection", new EyeTrackingVector3(headDirection.x, headDirection.y, headDirection.z));
-        eyeTracking.Add("centerEyePosition", new EyeTrackingVector3(centerEyePosition.x, centerEyePosition.y, centerEyePosition.z));
-        eyeTracking.Add("averageGaze", new EyeTrackingVector3(averageGaze.x, averageGaze.y, averageGaze.z));
-        eyeTracking.Add("isGazingAtSomething", new EyeTrackingBool(isGazingAtSomething));
-        eyeTracking.Add("firstIntersectionPoint", new EyeTrackingVector3(firstIntersectionPoint.x, firstIntersectionPoint.y, firstIntersectionPoint.z));
-        eyeTracking.Add("gazedObjectName", new EyeTrackingString(gazedObjectName));
-        eyeTracking.Add("hasEyeTrackingTags", new EyeTrackingBool(hasEyeTrackingTags));
-        eyeTracking.Add("eyeTrackingTagsList", new EyeTrackingStringList(eyeTrackingTagsList));
+        eyeTracking.Add(ETData.LeftEyePosition, new EyeTrackingVector3(leftEyePosition.x, leftEyePosition.y, leftEyePosition.z));
+        eyeTracking.Add(ETData.LeftEyeRotation, new EyeTrackingVector3(leftEyeRotation.x, leftEyeRotation.y, leftEyeRotation.z));
+        eyeTracking.Add(ETData.LeftGaze, new EyeTrackingVector3(leftGaze.x, leftGaze.y, leftGaze.z));
+        eyeTracking.Add(ETData.RightEyePosition, new EyeTrackingVector3(rightEyePosition.x, rightEyePosition.y, rightEyePosition.z));
+        eyeTracking.Add(ETData.RightEyeRotation, new EyeTrackingVector3(rightEyeRotation.x, rightEyeRotation.y, rightEyeRotation.z));
+        eyeTracking.Add(ETData.RightGaze, new EyeTrackingVector3(rightGaze.x, rightGaze.y, rightGaze.z));
+        eyeTracking.Add(ETData.HeadDirection, new EyeTrackingVector3(headDirection.x, headDirection.y, headDirection.z));
+        eyeTracking.Add(ETData.CenterEyePosition, new EyeTrackingVector3(centerEyePosition.x, centerEyePosition.y, centerEyePosition.z));
+        eyeTracking.Add(ETData.AverageGaze, new EyeTrackingVector3(averageGaze.x, averageGaze.y, averageGaze.z));
+        eyeTracking.Add(ETData.IsGazingAtSomething, new EyeTrackingBool(isGazingAtSomething));
+        eyeTracking.Add(ETData.FirstIntersectionPoint, new EyeTrackingVector3(firstIntersectionPoint.x, firstIntersectionPoint.y, firstIntersectionPoint.z));
+        eyeTracking.Add(ETData.GazedObjectName, new EyeTrackingString(gazedObjectName));
+        eyeTracking.Add(ETData.HasEyeTrackingTags, new EyeTrackingBool(hasEyeTrackingTags));
+        eyeTracking.Add(ETData.EyeTrackingTagsList, new EyeTrackingStringList(eyeTrackingTagsList));
 
         //Send data if different
         if (CanSend() && !IsSameData(eyeTracking))
@@ -121,7 +119,7 @@ public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTrackin
         if (EyeTrackingVisualization != null) { EyeTrackingVisualization.transform.position = position; }
     }
 
-    private bool IsSameData(Dictionary<string,IEyeTracking> eyeTracking)
+    private bool IsSameData(Dictionary<ETData, IEyeTracking> eyeTracking)
     {
         bool isSameData = true;
         foreach (var kvp in PreviousEyeTracking)
@@ -151,7 +149,7 @@ public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTrackin
         return isSameData;
     }
 
-    private void UpdatePreviousData(Dictionary<string, IEyeTracking> eyeTracking)
+    private void UpdatePreviousData(Dictionary<ETData, IEyeTracking> eyeTracking)
     {
         foreach (var key in eyeTracking.Keys)
         {
@@ -167,7 +165,7 @@ public class PsiExporterEyeTracking : PsiExporter<Dictionary<string, IEyeTrackin
 
 
 #if PLATFORM_ANDROID
-    protected override Microsoft.Psi.Interop.Serialization.IFormatSerializer<Dictionary<string, IEyeTracking>> GetSerializer()
+    protected override Microsoft.Psi.Interop.Serialization.IFormatSerializer<Dictionary<ETData, IEyeTracking>> GetSerializer()
     {
         return PsiFormatEyeTracking.GetFormat();
     }
